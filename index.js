@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;
 
@@ -20,7 +21,7 @@ const userRoute = require("./routes/userRoutes");
 const soket = require("./soket/soket");
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/socket_io_learning")
+  .connect(process.env.MONGO_URL)
   .then(() => console.log("Connected!"))
   .catch((e) => console.log(e));
 
@@ -31,17 +32,6 @@ app.use("/user", userRoute);
 app.get("/", (req, res) => {
   res.send("Welcome to Socket.IO server!");
 });
-
-// io.on("connection", (socket) => {
-//   console.log("New client connected:", socket.id);
-//   socket.join("room");
-//   socket.on("new-user-joined", (Name) => {
-//     socket.broadcast.to("room").emit("user-join", Name);
-//   });
-//   socket.on("send-msg", (msg) => {
-//     socket.broadcast.to("room").emit("receive-msg", msg);
-//   });
-// });
 
 soket(server);
 

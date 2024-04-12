@@ -6,7 +6,7 @@ module.exports = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("New client connected:", socket.id);
+    // console.log("New client connected:", socket.id);
     socket.join("room");
 
     socket.on("new-user-joined", (Name) => {
