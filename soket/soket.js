@@ -10,11 +10,11 @@ module.exports = (server) => {
     socket.join("room");
 
     socket.on("new-user-joined", (Name) => {
-      socket.to("room").broadcast.emit("user-join", Name);
+      socket.broadcast.to("room").emit("user-join", Name);
     });
 
     socket.on("send-msg", (msg) => {
-      socket.to("room").broadcast.emit("receive-msg", msg);
+      socket.broadcast.to("room").emit("receive-msg", msg);
     });
   });
 };

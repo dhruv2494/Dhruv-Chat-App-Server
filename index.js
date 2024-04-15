@@ -1,55 +1,43 @@
-// const express = require("express");
-// const http = require("http");
-// const { Server } = require("socket.io");
-// const bodyParser = require("body-parser");
-// require("dotenv").config();
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const bodyParser = require("body-parser");
+require("dotenv").config();
 
-// const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 
-// const app = express();
-// const server = http.createServer(app);
+const app = express();
+const server = http.createServer(app);
 
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-// const io = new Server(server, {
-//   cors: {},
-// });
+const io = new Server(server, {
+  cors: {},
+});
 
-// app.use(bodyParser.json());
-// const cors = require("cors");
-// const userRoute = require("./routes/userRoutes");
-// const soket = require("./soket/soket");
+app.use(bodyParser.json());
+const cors = require("cors");
+const userRoute = require("./routes/userRoutes");
+const soket = require("./soket/soket");
 
-// mongoose
-//   .connect(process.env.MONGO_URL)
-//   .then(() => console.log("Connected!"))
-//   .catch((e) => console.log(e));
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => console.log("Connected!"))
+  .catch((e) => console.log(e));
 
-// app.use(cors());
+app.use(cors());
 
-// app.use("/user", userRoute);
+app.use("/user", userRoute);
 
-// app.get("/", (req, res) => {
-//   res.send("Welcome to Socket.IO server!");
-// });
+app.get("/", (req, res) => {
+  res.send("Welcome to Socket.IO server!");
+});
 
-// soket(server);
+soket(server);
 
-// server.listen(PORT, () => {
-//   console.log(`Server started on port ${PORT}`);
-// });
-
-
-
-
-
-
-
-
-
-
-
-
+server.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
 
 // const express = require("express");
 // const { Server } = require("socket.io");
@@ -109,68 +97,59 @@
 
 // module.exports = app;
 
+// const express = require("express");
+// const { Server } = require("socket.io");
+// const http = require("http");
+// const bodyParser = require("body-parser");
+// const mongoose = require("mongoose");
+// const cors = require("cors");
+// const userRoute = require("./routes/userRoutes");
+// require("dotenv").config();
 
+// const PORT = process.env.PORT || 4000;
 
+// const app = express();
+// const server = http.createServer(app);
 
+// const io = new Server(server, {
+//   cors: {},
+// });
 
+// const mongooseConnect = async () => {
+//   try {
+//     await mongoose.connect(process.env.MONGO_URL);
+//     console.log("Connected to MongoDB!");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
+// mongooseConnect();
 
+// app.use(bodyParser.json());
+// app.use(cors());
+// app.use("/user", userRoute);
 
+// app.get("/", (req, res) => {
+//   res.send("Welcome to Socket.IO server!");
+// });
 
+// io.attach(server);
 
-const express = require("express");
-const { Server } = require("socket.io");
-const http = require("http");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const userRoute = require("./routes/userRoutes");
-require("dotenv").config();
+// io.on("connection", (socket) => {
+//   socket.join("room");
 
-const PORT = process.env.PORT || 4000;
+//   socket.on("new-user-joined", (Name) => {
+//     socket.to("room").broadcast.emit("user-join", Name);
+//   });
 
-const app = express();
-const server = http.createServer(app);
+//   socket.on("send-msg", (msg) => {
+//     socket.to("room").broadcast.emit("receive-msg", msg);
+//   });
 
-const io = new Server(server, {
-  cors: {},
-});
+//   socket.on("disconnect", () => {
+//     console.log("user disconnected");
+//   });
+// });
 
-const mongooseConnect = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URL);
-    console.log("Connected to MongoDB!");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-mongooseConnect();
-
-app.use(bodyParser.json());
-app.use(cors());
-app.use("/user", userRoute);
-
-app.get("/", (req, res) => {
-  res.send("Welcome to Socket.IO server!");
-});
-
-io.attach(server);
-
-io.on("connection", (socket) => {
-  socket.join("room");
-
-  socket.on("new-user-joined", (Name) => {
-    socket.to("room").broadcast.emit("user-join", Name);
-  });
-
-  socket.on("send-msg", (msg) => {
-    socket.to("room").broadcast.emit("receive-msg", msg);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-});
-
-module.exports = app;
+// module.exports = app;
