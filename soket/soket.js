@@ -1,4 +1,5 @@
 const { Server } = require("socket.io");
+const chatArray = require("../models/chatmodel");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -7,14 +8,18 @@ module.exports = (server) => {
 
   io.on("connection", (socket) => {
     // console.log("New client connected:", socket.id);
-    socket.join("room");
-
-    socket.on("new-user-joined", (Name) => {
-      socket.broadcast.to("room").emit("user-join", Name);
+    socket.on("join-room", (room) => {
+      socket.join(room);
+      console.log(`Socket ${socket.id} joined room ${room}`);
     });
 
-    socket.on("send-msg", (msg) => {
-      socket.broadcast.to("room").emit("receive-msg", msg);
+   
+    socket.on("send-msg", async (data) => {
+      let a = await chatArray.find({ room: data.room });
+      let update = await chatArray.findByIdAndUpdate(a[0]._id, {
+        $set: { room: data.room, chat: [...a[0].chat, data.data] },
+      });
+      socket.broadcast.to(data.room).emit("receive-msg", data.data);
     });
   });
 };
