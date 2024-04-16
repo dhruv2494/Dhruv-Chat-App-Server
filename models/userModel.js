@@ -15,13 +15,6 @@ const userSchema = new Schema({
   password: {
     type: String,
   },
-  recentlyChatted: [
-    {
-      mobile: {
-        type: String,
-      },
-    },
-  ],
 });
 
 const user = mongoose.model("user", userSchema);

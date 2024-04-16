@@ -1,5 +1,6 @@
 // const user = require("../models/user");
 
+const recentChat = require("../models/recentChatModel");
 const user = require("../models/userModel");
 
 const findUser = async (req, res) => {
@@ -24,39 +25,35 @@ const searchUser = async (req, res) => {
   try {
     let a = await user.find({ mobile: req.body.mobile });
     if (a[0] !== undefined) {
-      let currentUser = await user.find({ mobile: req.body.myMobile });
-      // let currentUserData = currentUser[0];
-      // let finded = false;
-      // for (let i = 0; i < currentUserData.recentlyChatted.length; i++) {
-      //   if (currentUserData.recentlyChatted[i].mobile == req.body.myMobile) {
-      //     finded = true;
-      //     console.log(currentUser.recentlyChatted[i]);
-      //     break;
-      //   }
-      // }
-      // if (!finded) {
-      //   const update = await user.findByIdAndUpdate(currentUserData._id, {
-      //     $push: {
-      //       recentlyChatted: { mobile: req.body.mobile },
-      //     },
-      //   });
-      let currentUserData = currentUser[0];
+      let currentUser = await recentChat.find({
+        userMobile: req.body.myMobile,
+      });
+      if (currentUser[0] !== undefined) {
+        let currentUserData = currentUser[0];
 
-      const found = currentUserData.recentlyChatted.some(
-        (chat) => chat.mobile === req.body.mobile
-      );
+        const found = currentUserData.chat.some(
+          (chat) => chat.number === req.body.mobile
+        );
 
-      if (!found) {
-        const update = await user.findByIdAndUpdate(currentUserData._id, {
-          $push: {
-            recentlyChatted: { mobile: req.body.mobile },
-          },
-        });
-        console.log(update);
+        if (!found) {
+          const update = await recentChat.findByIdAndUpdate(
+            currentUserData._id,
+            {
+              $push: {
+                chat: { number: req.body.mobile },
+              },
+            }
+          );
+          console.log(update);
+        } else {
+          console.log("Mobile number  found in recentlyChatted array.");
+        }
       } else {
-        console.log("Mobile number  found in recentlyChatted array.");
+        const update = await recentChat.create({
+          userMobile: req.body.myMobile,
+          chat: [{ number: req.body.mobile }],
+        });
       }
-
       res.send({
         found: true,
         user: { name: a[0].name, mobile: a[0].mobile },
@@ -86,7 +83,6 @@ const register = async (req, res) => {
 };
 
 const getOtherUserData = async (req, res) => {
-  //   console.log(req.body.mobile);
   try {
     let a = await user.find({ mobile: req.body.mobile });
     if (a[0] !== undefined) {
@@ -103,5 +99,7 @@ const getOtherUserData = async (req, res) => {
     console.log(e);
   }
 };
+
+
 
 module.exports = { findUser, register, searchUser, getOtherUserData };

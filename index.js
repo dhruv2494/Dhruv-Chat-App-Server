@@ -15,7 +15,7 @@ const io = new Server(server, {
   cors: {},
 });
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 const cors = require("cors");
 const userRoute = require("./routes/userRoutes");
 const soket = require("./soket/soket");
@@ -40,4 +40,3 @@ soket(server);
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
-
